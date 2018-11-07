@@ -125,16 +125,62 @@ def grant_can_transfer_my_assets_permission_to_admin(account_id, key_pair):
     print_status_streaming(tx, port)
     return get_status(tx, port)
 
-def create_account(account_name, user_kp):
-    tx = tx_builder.creatorAccountId(creator) \
+def grant_can_transfer_my_assets_permission_to_admin(account_id, key_pair):
+    tx = tx_builder.creatorAccountId(account_id) \
         .createdTime(current_time()) \
-        .createAccount(account_name, DOMAIN, user_kp.publicKey()).build()
+        .grantPermission(creator, iroha.Grantable_kTransferMyAssets) \
+        .build()
 
     port = random_port()
 
     send_tx(tx, key_pair, port)
     print_status_streaming(tx, port)
     return get_status(tx, port)
+
+def create_account_with_100_coin(account_name, user_kp):
+    asset_id = ASSET + "#" + DOMAIN
+    account_id = account_name + "@" + DOMAIN
+    tx = tx_builder.creatorAccountId(creator) \
+        .createdTime(current_time()) \
+        .createAccount(account_name, DOMAIN, user_kp.publicKey()) \
+        .transferAsset("admin@test", account_id, asset_id, "", str(100)) \
+        .build()
+
+    port = random_port()
+
+    send_tx(tx, key_pair, port)
+    print_status_streaming(tx, port)
+    return get_status(tx, port)
+
+def get_account(account):
+    global query_counter
+    query_counter += 1
+    account_id = account + "@" + DOMAIN
+    query = query_builder.creatorAccountId(creator) \
+        .createdTime(current_time()) \
+        .queryCounter(query_counter) \
+        .getAccount(account_id) \
+        .build()
+
+    port = random_port()
+
+    query_response = send_query(query, key_pair, port)
+    return query_response
+
+def get_account_asset(account):
+    global query_counter
+    query_counter += 1
+    account_id = account + "@" + DOMAIN
+    query = query_builder.creatorAccountId(creator) \
+        .createdTime(current_time()) \
+        .queryCounter(query_counter) \
+        .getAccountAssets(account_id) \
+        .build()
+
+    port = random_port()
+
+    query_response = send_query(query, key_pair, port)
+    return query_response
 
 def random_port():
     i = randint(1, 3)
