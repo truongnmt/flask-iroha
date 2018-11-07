@@ -16,7 +16,7 @@ def create_account():
         # in case we don't have account_name on network
         if "errorResponse" in response and response["errorResponse"]["reason"] == "NO_ACCOUNT":
             user_kp = iroha.ModelCrypto().generateKeypair()
-            is_success = IrohaHelper.create_account_with_100_mfc(account_name, user_kp)
+            is_success = IrohaHelper.create_account_with_100_coin(account_name, user_kp)
             if is_success:
                 account_id = account_name + "@moneyforward"
                 IrohaHelper.grant_can_transfer_my_assets_permission_to_admin(account_id, user_kp)
