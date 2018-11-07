@@ -13,7 +13,8 @@ def create_account():
         return json_response(False, "Please send your account name", {}, 404)
     else:
         response = MessageToDict(IrohaHelper.get_account(account_name))
-        # in case we don't have account_name on network
+        print(response)
+	# in case we don't have account_name on network
         if "errorResponse" in response and response["errorResponse"]["reason"] == "NO_ACCOUNT":
             user_kp = iroha.ModelCrypto().generateKeypair()
             is_success = IrohaHelper.create_account(account_name, user_kp)

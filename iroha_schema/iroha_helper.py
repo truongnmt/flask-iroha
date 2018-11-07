@@ -20,8 +20,8 @@ PORT = "50051"
 DOMAIN = "test"
 ASSET = "test"
 query_counter = 1
-admin_priv = open("../admin@test.priv", "r").read()
-admin_pub = open("../admin@test.pub", "r").read()
+admin_priv = open("admin@test.priv", "r").read()
+admin_pub = open("admin@test.pub", "r").read()
 key_pair = crypto.convertFromExisting(admin_pub, admin_priv)
 
 def current_time():
